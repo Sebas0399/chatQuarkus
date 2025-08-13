@@ -8,7 +8,9 @@ import io.quarkus.websockets.next.WebSocket;
 import io.quarkus.websockets.next.WebSocketConnection;
 import jakarta.inject.Inject;
 
-@WebSocket(path = "/chat/{username}")
+import java.util.Objects;
+
+@WebSocket(path = "/chat/{contactId}")
 public class ChatWebSocket {
 
 	// Declare the type of messages that can be sent and received
@@ -23,12 +25,12 @@ public class ChatWebSocket {
 	public ChatMessage onOpen() {
 		Log.info("onOppen: " + connection);
 
-		return new ChatMessage(MessageType.USER_JOINED, connection.pathParam("username"), null);
+		return new ChatMessage(MessageType.USER_JOINED, connection.pathParam("contactId"), null);
 	}
 
 	@OnClose
 	public void onClose() {
-		ChatMessage departure = new ChatMessage(MessageType.USER_LEFT, connection.pathParam("username"), null);
+		ChatMessage departure = new ChatMessage(MessageType.USER_LEFT, connection.pathParam("contactId"), null);
 		connection.broadcast().sendTextAndAwait(departure);
 	}
 
@@ -37,5 +39,14 @@ public class ChatWebSocket {
 		Log.info("onMessage: " + message);
 		return message;
 	}
+
+    public void sendToContact(String contactId, Object message) {
+        connection.getOpenConnections().forEach(conn -> {
+            if (Objects.equals(contactId, conn.pathParam("contactId"))) {
+                conn.sendTextAndAwait(message);
+            }
+        });
+
+    }
 
 }
