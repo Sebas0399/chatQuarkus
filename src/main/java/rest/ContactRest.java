@@ -24,6 +24,7 @@ public class ContactRest {
     @Inject
     CompanyService companyService;
 
+
     @GET
     @Path("/company/{companyId}")
     public List<ContactDto> findByCompany(@PathParam("companyId") Integer companyId){

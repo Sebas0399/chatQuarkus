@@ -1,7 +1,12 @@
 package db;
 
+import db.utils.JsonObjectConverter;
+import jakarta.json.Json;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.Type;
+
+import java.util.HashMap;
 
 @Table (name = "companies")
 @Entity
@@ -12,4 +17,7 @@ public class Company {
     private Integer id;
     private String name;
     private String webhookToken;
+	@Column(columnDefinition = "jsonb") // o "json"
+	@Convert(converter = JsonObjectConverter.class)
+	private Json configs;
 }

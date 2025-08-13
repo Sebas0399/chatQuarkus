@@ -64,8 +64,15 @@ public class WebhookRest {
                 message.setCompany_id(contactoEncontrado.getCompany_id());
                 message.setIsFromContact(true);
                 messagesRepository.persist(message);
-                chatWebSocket.sendToContact(String.valueOf(contactoEncontrado.getId()),message);
-            }
+				//chatWebSocket.onMessage(new ChatWebSocket.ChatMessage(CHAT_MESSAGE,"user",message.getText()));
+				chatWebSocket.sendToContact(
+					String.valueOf(contactoEncontrado.getId()),
+					new ChatWebSocket.ChatMessage(
+						ChatWebSocket.MessageType.CHAT_MESSAGE,
+						"CONTACT", // o el nombre del remitente
+						message.getText()
+					)
+				);           }
             else {
                 Contact contact=new Contact();
                 contact.setNumber(contacts.getString("wa_id"));
