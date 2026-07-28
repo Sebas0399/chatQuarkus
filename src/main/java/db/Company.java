@@ -20,4 +20,6 @@ public class Company {
 	@Column(columnDefinition = "jsonb") // o "json"
 	@Convert(converter = JsonObjectConverter.class)
 	private Json configs;
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    public List<Assistant> assistans = new ArrayList<>();
 }

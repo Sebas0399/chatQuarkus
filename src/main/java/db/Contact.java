@@ -13,4 +13,5 @@ public class Contact {
     private String name;
     private Integer company_id;
     private String number;
+    private boolean hasNotification;
 }

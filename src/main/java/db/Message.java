@@ -15,6 +15,4 @@ public class Message {
     private Boolean isFromCompany;
     private Integer company_id;
     private Integer contact_id;
-
-
 }
