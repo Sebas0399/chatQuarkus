@@ -1,12 +1,12 @@
 package repo;
 
-import db.Assistant;
+import db.User;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 @ApplicationScoped
 @Transactional
-public class AssistantsRepository implements PanacheRepositoryBase<Assistant,Integer>{
+public class UserRepository implements PanacheRepositoryBase<User,Integer>{
 
 }

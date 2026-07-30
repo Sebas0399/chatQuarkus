@@ -2,6 +2,8 @@ package service.assistant;
 
 import java.util.Optional;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import repo.AssistantsRepository;
 
 @ApplicationScoped

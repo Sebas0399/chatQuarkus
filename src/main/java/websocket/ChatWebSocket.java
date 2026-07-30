@@ -8,7 +8,7 @@ import jakarta.inject.Inject;
 import java.util.Objects;
 
 @WebSocket(path = "/chat}")
-public class ContactWebSocket {
+public class ChatWebSocket {
 
     // Declare the type of messages that can be sent and received
 
@@ -18,7 +18,7 @@ public class ContactWebSocket {
     OpenConnections openConnections;
 
     @OnOpen(broadcast = true)
-    public ChatMessage onOpen() {
+    public void onOpen() {
         Log.info("onOppen: " + connection);
 
     }

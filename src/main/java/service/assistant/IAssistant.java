@@ -1,7 +1,7 @@
 package service.assistant;
 public interface IAssistant {
-    public void response(string message);
+    public void response(String message);
 }
-public enum IA_TYPE{
+enum IA_TYPE{
     GEMINI
 }
