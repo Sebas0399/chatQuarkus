@@ -1,11 +1,15 @@
-# Etapa 1: Compilar la aplicación usando Maven oficial
-FROM maven:3.9-eclipse-temurin-17 AS build
+# Etapa 1: Compilar la aplicación usando Maven con Java 21
+FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /code
-COPY . /code
-RUN mvn clean package
 
-# Etapa 2: Imagen de ejecución ligera
-FROM eclipse-temurin:17-jre-alpine    
+# Forzamos la copia del archivo pom y la carpeta src
+COPY pom.xml /code/
+COPY src /code/src
+
+RUN mvn clean package -DskipTests
+
+# Etapa 2: Imagen de ejecución ligera con Java 21
+FROM eclipse-temurin:21-jre-alpine    
 WORKDIR /work/
 COPY --from=build /code/target/quarkus-app/lib/ /work/lib/
 COPY --from=build /code/target/quarkus-app/*.jar /work/
