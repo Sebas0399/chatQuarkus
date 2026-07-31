@@ -17,10 +17,8 @@ import service.assistant.AssistantService;
 import service.assistant.IA_TYPE;
 import websocket.ChatWebSocket;
 import websocket.ContactWebSocket;
-
-import static io.vertx.core.json.JsonObject.mapFrom;
-import static websocket.ChatWebSocket.MessageType.CHAT_MESSAGE;
-
+import java.util.concurrent.CompletableFuture;
+import jakarta.transaction.UserTransaction;
 import java.util.Optional;
 
 @Path("/webhook")
@@ -41,6 +39,8 @@ public class WebhookRest {
     AssistantService assistantService;
     @Inject 
     AssistantFactory assistantFactory;
+    @Inject
+    UserTransaction userTransaction;
     @GET
     @Path("/whatsapp/{token}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -73,30 +73,82 @@ public class WebhookRest {
             if (contactoEncontrado != null) {
                 Message message = new Message();
                 message.setText(messages.getJsonObject("text").getString("body"));
-                message.setContact_id(contactoEncontrado.getId());
-                message.setCompany_id(contactoEncontrado.getCompany_id());
+                message.setCompany(contactoEncontrado.getCompany());;
+                message.setContact(contactoEncontrado);
                 message.setIsFromContact(true);
-                messagesRepository.persist(message);
-                // emitimos al contacto
-                contactWebSocket.sendToContact(
-                        String.valueOf(contactoEncontrado.getId()),
-                        new ContactWebSocket.ChatMessage(
-                                ContactWebSocket.MessageType.CHAT_MESSAGE,
-                                "CONTACT", // o el nombre del remitente
-                                message.getText()));
-                // emitimos al canal de notificaciones
-                chatWebSocket.updateNotification(contactoEncontrado.getId());
-                contactoEncontrado.setHasNotification(true);
-                contactoEncontrado.persist();
-                //obtener el proveedor de ia activo
-                Optional<IA_TYPE> iaType=assistantService.getActiveIaProvider(contactoEncontrado.getCompany_id());
-                if(iaType.isEmpty){
-
+                messagesRepository.persistAndFlush(message);
+                // emitimos al contacto (manejo de errores para no romper el flujo)
+                try {
+                    contactWebSocket.sendToContact(
+                            String.valueOf(contactoEncontrado.getId()),
+                            new ContactWebSocket.ChatMessage(
+                                    ContactWebSocket.MessageType.CHAT_MESSAGE,
+                                    contactoEncontrado.getName() != null ? contactoEncontrado.getName() : "CONTACT",
+                                    message.getText()));
+                } catch (Exception e) {
+                    Log.error("Error sending message to contact WebSocket", e);
                 }
-                var assistant=assistantFactory.getProvider(iaType);
-                assistant.response(message.getText());
-                //analizamos la intencion del usuario
-
+                // emitimos al canal de notificaciones
+                try {
+                    chatWebSocket.updateNotification(contactoEncontrado.getId());
+                    contactoEncontrado.setHasNotification(true);
+                    contactsRepository.persist(contactoEncontrado);
+                } catch (Exception e) {
+                    Log.error("Error updating notification / persisting contact notification flag", e);
+                }
+                //obtener el proveedor de ia activo
+                Optional<IA_TYPE> iaType=assistantService.getActiveIaProvider(contactoEncontrado.getCompany().getId());
+                if (iaType.isEmpty()) {
+                    return Response.status(Response.Status.CONFLICT)
+                            .entity("No IA provider configured for this company")
+                            .build();
+                }
+                var assistant = assistantFactory.getProvider(iaType.get());
+                // Llamada asíncrona a la IA para no bloquear el webhook
+                CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return assistant.response(message.getText(), contactoEncontrado.getCompany().getId());
+                    } catch (Exception e) {
+                        Log.error("Error calling assistant provider asynchronously", e);
+                        return null;
+                    }
+                }).thenAcceptAsync(responseText -> {
+                    if (responseText == null) return;
+                    try {
+                        userTransaction.begin();
+                        Message assistantMessage = new Message();
+                        assistantMessage.setText(responseText);
+                        assistantMessage.setCompany(contactoEncontrado.getCompany());
+                        assistantMessage.setContact(contactoEncontrado);
+                        assistantMessage.setIsFromContact(false);
+                        messagesRepository.persistAndFlush(assistantMessage);
+                        try {
+                            contactWebSocket.sendToContact(
+                                    String.valueOf(contactoEncontrado.getId()),
+                                    new ContactWebSocket.ChatMessage(
+                                            ContactWebSocket.MessageType.CHAT_MESSAGE,
+                                            contactoEncontrado.getName() != null ? contactoEncontrado.getName() : "ASSISTANT",
+                                            responseText));
+                        } catch (Exception e) {
+                            Log.error("Error sending assistant response to contact WebSocket", e);
+                        }
+                        try {
+                            chatWebSocket.updateNotification(contactoEncontrado.getId());
+                            contactoEncontrado.setHasNotification(true);
+                            contactsRepository.persist(contactoEncontrado);
+                        } catch (Exception e) {
+                            Log.error("Error updating notification after assistant response", e);
+                        }
+                        userTransaction.commit();
+                    } catch (Exception e) {
+                        Log.error("Error persisting assistant response", e);
+                        try {
+                            userTransaction.rollback();
+                        } catch (Exception ex) {
+                            Log.error("Error rolling back transaction for assistant response", ex);
+                        }
+                    }
+                });
                 //respondemos
 
             } else {

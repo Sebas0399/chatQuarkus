@@ -27,11 +27,11 @@ public class MessageRest {
         var messages=messagesRepository.findByContactId(contactId);
         return messages.stream().map(obj->{
             MessageDto dto=new MessageDto();
-            dto.setCompany_id(obj.getCompany_id());
+            dto.setCompanyId(obj.getCompany().getId());
             dto.setId(obj.getId());
             dto.setIsFromContact(obj.getIsFromContact());
             dto.setText(obj.getText());
-            dto.setContact_id(obj.getContact_id());
+            dto.setContactId(obj.getContact().getId());
             dto.setIsFromCompany(obj.getIsFromCompany());
             return dto;
         }).toList();

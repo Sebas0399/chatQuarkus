@@ -1,7 +1,10 @@
 package service.assistant;
+
+import db.Assistant;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+
 public interface IAssistant {
-    public void response(String message);
-}
-enum IA_TYPE{
-    GEMINI
+    String response(String message, Integer companyId);
+
+    ChatLanguageModel buildChatModel(Assistant assistant);
 }

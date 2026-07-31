@@ -6,5 +6,5 @@ import lombok.Data;
 public class ContactDto {
     private Integer id;
     private String name;
-    private Integer company_id;
+    private Integer companyId;
 }

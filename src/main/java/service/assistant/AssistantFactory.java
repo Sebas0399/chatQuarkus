@@ -11,7 +11,7 @@ public class AssistantFactory {
 
     public IAssistant getProvider(IA_TYPE type) {
         switch (type) {
-            case IA_TYPE.GEMINI:
+            case GEMINI:
                 return geminiService;
             default:
                 break;

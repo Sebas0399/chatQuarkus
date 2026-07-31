@@ -8,6 +8,6 @@ public class MessageDto {
     private String text;
     private Boolean isFromContact;
     private Boolean isFromCompany;
-    private Integer company_id;
-    private Integer contact_id;
+    private Integer companyId;
+    private Integer contactId;
 }

@@ -32,7 +32,7 @@ public class ContactRest {
         var contactos=contactsRepository.findByCompanyId(companyId);
         return contactos.stream().map(obj->{
             ContactDto dto=new ContactDto();
-            dto.setCompany_id(obj.getCompany_id());
+            dto.setCompanyId(obj.getCompany().getId());
             dto.setId(obj.getId());
             dto.setName(obj.getName());
             return dto;

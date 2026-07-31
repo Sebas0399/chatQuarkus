@@ -13,6 +13,12 @@ public class Message {
     private String text;
     private Boolean isFromContact;
     private Boolean isFromCompany;
-    private Integer company_id;
-    private Integer contact_id;
+    // private Integer company_id;
+    // private Integer contact_id;
+    @ManyToOne(fetch = FetchType.LAZY) // Lazy loading prevents performance issues
+    @JoinColumn(name = "company_id")
+    public Company company;
+    @ManyToOne(fetch = FetchType.LAZY) // Lazy loading prevents performance issues
+    @JoinColumn(name = "contact_id")
+    public Contact contact;
 }

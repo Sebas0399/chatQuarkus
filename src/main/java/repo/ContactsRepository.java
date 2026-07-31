@@ -1,6 +1,5 @@
 package repo;
 
-import db.Company;
 import db.Contact;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
