@@ -1,12 +1,16 @@
-# Stage 1: Build native executable with GraalVM
-FROM quay.io/quarkus/ubi-quarkus-graalvmce-builder-image:22.3-java17 AS build
-COPY --chown=quarkus:quarkus . .
-RUN ./mvnw package -Pnative
+# Etapa 1: Compilar la aplicación usando Maven oficial
+FROM maven:3.9-eclipse-temurin-17 AS build
+WORKDIR /code
+COPY . /code
+RUN mvn clean package
 
-# Stage 2: Tiny runtime image
-FROM quay.io/quarkus/quarkus-micro-image:2.0
+# Etapa 2: Imagen de ejecución ligera
+FROM eclipse-temurin:17-jre-alpine    
 WORKDIR /work/
-COPY --from=build /code/target/*-runner /work/application
-RUN chmod 775 /work /work/application
+COPY --from=build /code/target/quarkus-app/lib/ /work/lib/
+COPY --from=build /code/target/quarkus-app/*.jar /work/
+COPY --from=build /code/target/quarkus-app/app/ /work/app/
+COPY --from=build /code/target/quarkus-app/quarkus/ /work/quarkus/
+
 EXPOSE 8080
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+CMD ["java", "-Dquarkus.http.host=0.0.0.0", "-jar", "/work/quarkus-run.jar"]
