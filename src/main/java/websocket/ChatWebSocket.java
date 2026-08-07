@@ -2,12 +2,9 @@ package websocket;
 
 import io.quarkus.logging.Log;
 import io.quarkus.websockets.next.*;
-import io.vertx.core.json.Json;
 import jakarta.inject.Inject;
 
-import java.util.Objects;
-
-@WebSocket(path = "/chat}")
+@WebSocket(path = "/chat")
 public class ChatWebSocket {
 
     // Declare the type of messages that can be sent and received
@@ -30,8 +27,9 @@ public class ChatWebSocket {
     }
 
     @OnTextMessage
-    public Boolean onTextMessage() {
-        return true;
+    public String onTextMessage(String message) {
+        Log.info("onTextMessage: " + message);
+        return message;
     }
 
     public void updateNotification(Integer contactId) {

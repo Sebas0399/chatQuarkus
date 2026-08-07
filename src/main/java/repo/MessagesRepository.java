@@ -1,13 +1,14 @@
 package repo;
 
 import db.Company;
-import db.Contact;
 import db.Message;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+
+import Infraestructure.Contracts.Entities.Contact;
 
 @ApplicationScoped
 @Transactional

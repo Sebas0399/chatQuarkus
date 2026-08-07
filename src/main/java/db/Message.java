@@ -1,5 +1,6 @@
 package db;
 
+import Infraestructure.Contracts.Entities.Contact;
 import jakarta.persistence.*;
 import lombok.Data;
 

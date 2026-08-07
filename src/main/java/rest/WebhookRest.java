@@ -1,6 +1,5 @@
 package rest;
 
-import db.Contact;
 import db.Message;
 import io.quarkus.logging.Log;
 import io.vertx.core.json.JsonObject;
@@ -18,6 +17,8 @@ import service.assistant.IA_TYPE;
 import websocket.ChatWebSocket;
 import websocket.ContactWebSocket;
 import java.util.concurrent.CompletableFuture;
+
+import Infraestructure.Contracts.Entities.Contact;
 import jakarta.transaction.UserTransaction;
 import java.util.Optional;
 

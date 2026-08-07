@@ -1,7 +1,6 @@
 package rest;
 
 import db.Message;
-import dtos.ContactDto;
 import dtos.MessageDto;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,6 +11,8 @@ import jakarta.ws.rs.core.MediaType;
 import repo.MessagesRepository;
 
 import java.util.List;
+
+import Domain.Models.Contact;
 
 @Path("/messages")
 @Produces(MediaType.APPLICATION_JSON)
