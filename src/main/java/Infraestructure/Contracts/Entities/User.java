@@ -1,4 +1,4 @@
-package db;
+package Infraestructure.Contracts.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import db.Company;
 import io.quarkus.security.jpa.Password;
 import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;

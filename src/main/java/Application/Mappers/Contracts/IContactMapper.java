@@ -1,4 +1,4 @@
-package Application.Contracts;
+package Application.Mappers.Contracts;
 
 import Application.ViewModels.ContactViewModel;
 

@@ -1,14 +1,14 @@
 package service;
 
+import Domain.Contracts.UserRepository;
+import Infraestructure.Contracts.Entities.User;
 import db.Company;
-import db.User;
 import dtos.request.UserRegisterRequest;
 import dtos.response.GenericResponse;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import repo.CompaniesRepository;
-import repo.UserRepository;
 
 @ApplicationScoped
 public class UserService {

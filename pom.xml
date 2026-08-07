@@ -91,13 +91,18 @@
             <artifactId>langchain4j</artifactId>
             <version>0.35.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
+        </dependency>
+
         <!-- Provider (Ejemplo: OpenAI / Compatible con LocalAI, Ollama, Groq, vLLM, etc.) -->
         <dependency>
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-open-ai</artifactId>
             <version>0.35.0</version>
         </dependency>
-    
+
     </dependencies>
     <build>
         <plugins>
@@ -105,7 +110,7 @@
                 <groupId>${quarkus.platform.group-id}</groupId>
                 <artifactId>quarkus-maven-plugin</artifactId>
                 <version>${quarkus.platform.version}</version>
-                
+
                 <extensions>true</extensions>
                 <executions>
                     <execution>

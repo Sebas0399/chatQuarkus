@@ -1,4 +1,4 @@
-package rest;
+package Services.Controllers;
 
 import db.Company;
 import io.vertx.core.json.JsonObject;
@@ -10,27 +10,21 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.reactive.streams.operators.ReactiveStreams;
+
+import Application.Services.JwtService;
 import repo.CompaniesRepository;
-import service.JwtService;
 
 import java.util.List;
 
-@Path("/companies")
+@Path("/auth")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 @Transactional
-public class CompanyRest {
+public class UserController {
 
 	@Inject
 	JwtService jwtService;
-	@Inject
-	CompaniesRepository companiesRepository;
-	@GET
-	public List<Company> getCompanies() {
-		return  companiesRepository.listAll();
-	}
-
 	@POST
 	@Path(("/login"))
 	public Response login(JsonObject body){

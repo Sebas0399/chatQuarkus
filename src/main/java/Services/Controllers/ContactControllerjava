@@ -21,9 +21,8 @@ import Domain.Models.Contact;
 @Transactional
 public class ContactController {
     @Inject
-    ContactService contactsService;
-    @Inject
-    CompanyService companyService;
+    IContactService contactsService;
+  
 
 
     @GET

@@ -1,6 +1,6 @@
-package Application.Mappers;
+package Application.Mappers.Mapper;
 
-import Application.Contracts.IContactMapper;
+import Application.Mappers.Contracts.IContactMapper;
 import Application.ViewModels.ContactViewModel;
 import jakarta.enterprise.context.ApplicationScoped;
 
