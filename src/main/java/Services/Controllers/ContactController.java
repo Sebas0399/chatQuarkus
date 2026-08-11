@@ -11,8 +11,11 @@ import service.CompanyService;
 
 import java.util.List;
 
+import Application.Contracts.IContactService;
 import Application.Services.ContactService;
+import Application.ViewModels.ContactViewModel;
 import Domain.Models.Contact;
+import Domain.Models.Response;
 
 @Path("/contacts")
 @Produces(MediaType.APPLICATION_JSON)

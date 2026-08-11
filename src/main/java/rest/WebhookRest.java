@@ -1,6 +1,5 @@
 package rest;
 
-import db.Message;
 import io.quarkus.logging.Log;
 import io.vertx.core.json.JsonObject;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,6 +18,7 @@ import websocket.ContactWebSocket;
 import java.util.concurrent.CompletableFuture;
 
 import Infraestructure.Contracts.Entities.Contact;
+import Infraestructure.Contracts.Entities.Message;
 import jakarta.transaction.UserTransaction;
 import java.util.Optional;
 

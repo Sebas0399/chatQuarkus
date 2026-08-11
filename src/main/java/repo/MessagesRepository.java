@@ -1,7 +1,6 @@
 package repo;
 
 import db.Company;
-import db.Message;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -9,6 +8,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 
 import Infraestructure.Contracts.Entities.Contact;
+import Infraestructure.Contracts.Entities.Message;
 
 @ApplicationScoped
 @Transactional

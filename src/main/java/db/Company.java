@@ -7,6 +7,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+import Infraestructure.Contracts.Entities.Message;
 import Infraestructure.Contracts.Entities.User;
 
 @Table (name = "companies")

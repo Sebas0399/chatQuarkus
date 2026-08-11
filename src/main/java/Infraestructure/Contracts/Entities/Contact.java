@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db.Company;
-import db.Message;
 import jakarta.persistence.*;
 import lombok.Data;
 

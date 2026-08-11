@@ -1,6 +1,4 @@
 package Infraestructure.Repository;
-
-import Domain.Contracts.IContactsRepository;
 import Domain.Contracts.IUserRepository;
 import Infraestructure.Contracts.Entities.User;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;

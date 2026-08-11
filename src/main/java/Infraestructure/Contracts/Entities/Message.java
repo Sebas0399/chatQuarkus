@@ -1,6 +1,6 @@
-package db;
+package Infraestructure.Contracts.Entities;
 
-import Infraestructure.Contracts.Entities.Contact;
+import db.Company;
 import jakarta.persistence.*;
 import lombok.Data;
 
