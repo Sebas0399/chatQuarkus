@@ -30,6 +30,7 @@ public class AssistantsRepository implements IAssistantRepository, PanacheReposi
         assistant.setModel(entity.getModel());
         assistant.setSystemPrompt(entity.getSystemPrompt());
         assistant.setToken(entity.getToken());
+        assistant.setToolsJson(entity.getToolsJson());
         assistant.setUrl(entity.getUrl());
         return assistant;
     }
