@@ -9,10 +9,11 @@ import Application.Contracts.IJwtService;
 
 @ApplicationScoped
 public class JwtService implements IJwtService {
-	public String generateToken(String username, Set<String> roles) {
+	public String generateToken(String username, Set<String> roles,Integer companyId) {
 		return Jwt.issuer("quarkus-jwt")
 			.upn(username)
 			.groups(roles)
+			.claim("companyId", companyId)
 			.sign();
 	}
 }

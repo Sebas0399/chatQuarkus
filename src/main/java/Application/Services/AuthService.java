@@ -26,7 +26,7 @@ public class AuthService implements IAuthService {
             throw new DomainException("Credenciales inválidas");
         }
         
-        var token = jwtService.generateToken(user.getUsername(), Set.of(user.getRole()));
+        var token = jwtService.generateToken(user.getUsername(), Set.of(user.getRole()),user.getCompanyId());
         AuthViewModel res = new AuthViewModel();
         res.setToken(token);
         res.setRole(user.getRole());

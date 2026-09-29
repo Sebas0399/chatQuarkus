@@ -1,18 +1,17 @@
 package Services.Controllers;
 
-import io.quarkus.logging.Log;
+import io.quarkus.security.Authenticated;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import java.util.List;
+
 import Application.Contracts.IContactService;
+import Application.Contracts.IUserContextService;
 import Application.Entities.ContactFilter;
 import Application.Entities.PagedRequest;
-import Application.Services.ContactService;
 import Application.ViewModels.ContactViewModel;
-import Domain.Models.Contact;
 import Domain.Models.PageResponse;
 import Domain.Models.Response;
 
@@ -21,29 +20,20 @@ import Domain.Models.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 @Transactional
+@Authenticated
 public class ContactController {
     @Inject
     IContactService contactsService;
-  
-
-
+    @Inject
+    IUserContextService userContext;
 
     @POST
     @Path("/byCompany")
     public Response<PageResponse<ContactViewModel>> findByCompany(PagedRequest<ContactFilter> request){
+        if (request.getFilter() == null) {
+            request.setFilter(new ContactFilter());
+        }
+        request.getFilter().setCompanyId(userContext.getCompanyId());
         return Response.success(contactsService.findByCompanyId(request));
     }
-
-//     @POST
-//     @Path("/paged")
-//     public Response<PageResponse<ContactViewModel>> findPaged(PagedRequest<ContactFilter> request) {
-//         return Response.success(contactsService.findPaged(request));
-//     }
-// }
-
-//     @GET
-//     @Path("/paged")
-//     public Response<PageResponse<ContactViewModel>> findPaged(@BeanParam PagedRequest request) {
-//         return Response.success(contactsService.findPaged(request));
-//     }
 }

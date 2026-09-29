@@ -10,31 +10,36 @@ import java.util.Map;
 
 import Application.Contracts.IAssistantService;
 import Application.Contracts.IScriptEngineService;
+import Application.Contracts.IUserContextService;
 import Application.Entities.SaveAssistantRequest;
 import Application.Entities.TestScriptRequest;
 import Application.Entities.TestToolResponse;
 import Application.ViewModels.AssistantViewModel;
 import Domain.Models.Response;
+import io.quarkus.security.Authenticated;
 
 @Path("/assistants")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @ApplicationScoped
 @Transactional
+@Authenticated
 public class AssistantController {
     @Inject
     IAssistantService assistantService;
     @Inject
     IScriptEngineService scriptEngineService;
+    @Inject
+    IUserContextService userContext;
 
     @GET
-    @Path("/{companyId}")
-    public Response<AssistantViewModel> findByContactId(@PathParam("companyId") Integer companyId) {
-        return Response.success(assistantService.getAssistant(companyId));
+    public Response<AssistantViewModel> getAssistant() {
+        return Response.success(assistantService.getAssistant(userContext.getCompanyId()));
     }
 
     @POST
     public Response<Boolean> saveAssistant(SaveAssistantRequest request) {
+        request.setCompanyId(userContext.getCompanyId());
         return Response.success(assistantService.saveAssistant(request));
     }
 
