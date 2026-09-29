@@ -6,7 +6,10 @@ WORKDIR /code
 COPY pom.xml /code/
 COPY src /code/src
 
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -B \
+    -Dmaven.wagon.http.retryHandler.count=5 \
+    -Dmaven.wagon.http.retryHandler.requestSentRetryEnabled=true \
+    -Dhttp.keepAlive=false
 
 # Etapa 2: Imagen de ejecución ligera con Java 21
 FROM eclipse-temurin:21-jre-alpine    
