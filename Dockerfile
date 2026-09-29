@@ -2,14 +2,12 @@
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /code
 
-# Forzamos la copia del archivo pom y la carpeta src
+# Forzamos la copia del archivo pom, settings y la carpeta src
+COPY settings.xml /code/
 COPY pom.xml /code/
 COPY src /code/src
 
-RUN mvn clean package -DskipTests -B \
-    -Dmaven.wagon.http.retryHandler.count=5 \
-    -Dmaven.wagon.http.retryHandler.requestSentRetryEnabled=true \
-    -Dhttp.keepAlive=false
+RUN mvn clean package -DskipTests -B -s /code/settings.xml
 
 # Etapa 2: Imagen de ejecución ligera con Java 21
 FROM eclipse-temurin:21-jre-alpine    
