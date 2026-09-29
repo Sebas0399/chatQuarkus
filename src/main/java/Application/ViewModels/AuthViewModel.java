@@ -6,4 +6,5 @@ import lombok.Data;
 public class AuthViewModel {
     private String token;
     private String role;
+    private Integer companyId;
 }

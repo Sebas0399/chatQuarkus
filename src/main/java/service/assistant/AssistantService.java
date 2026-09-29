@@ -2,10 +2,10 @@ package service.assistant;
 
 import java.util.Optional;
 
-import db.Assistant;
+import Infraestructure.Contracts.Entities.Assistant;
+import Infraestructure.Repository.AssistantsRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import repo.AssistantsRepository;
 
 @ApplicationScoped
 public class AssistantService {

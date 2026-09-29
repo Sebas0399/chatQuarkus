@@ -1,6 +1,5 @@
 package Infraestructure.Contracts.Entities;
 
-import db.Company;
 import jakarta.persistence.*;
 import lombok.Data;
 

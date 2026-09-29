@@ -1,9 +1,9 @@
 package Infraestructure.Contracts.Entities;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import db.Company;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +20,8 @@ public class Contact {
     public Company company;
     private String number;
     private boolean hasNotification;
+    private String email;
+    private LocalDateTime lastInteraction;
     @OneToMany(mappedBy = "contact", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<Message> messages = new ArrayList<>();
 }

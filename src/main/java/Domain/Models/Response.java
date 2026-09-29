@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -38,6 +39,14 @@ public class Response<T> {
         return success(data, "Operación realizada con éxito");
     }
 
+    public static <T> Response<PageResponse<T>> success(List<T> content, int pageNumber, int pageSize, long totalElements, String message) {
+        return success(PageResponse.of(content, pageNumber, pageSize, totalElements), message);
+    }
+
+    public static <T> Response<PageResponse<T>> success(List<T> content, int pageNumber, int pageSize, long totalElements) {
+        return success(PageResponse.of(content, pageNumber, pageSize, totalElements), "Operación realizada con éxito");
+    }
+
     // --- Métodos de respuesta de error ---
 
     public static <T> Response<T> error(String message, int statusCode) {
@@ -60,4 +69,6 @@ public class Response<T> {
                 .data(null)
                 .build();
     }
+
+  
 }

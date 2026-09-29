@@ -1,22 +1,19 @@
 package service.assistant;
-
-import db.Assistant;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
+import Domain.Contracts.IAssistantRepository;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import repo.AssistantsRepository;
-
 @ApplicationScoped
 public class Gemini implements IAssistant {
     @Inject
-    private AssistantsRepository assistantsRepository;
+    private IAssistantRepository assistantsRepository;
     @Override
     public String response(String message,Integer companyId) {
-        Assistant assistant = assistantsRepository.findByCompanyAndType(companyId, IA_TYPE.GEMINI);
+        Domain.Models.Assistant  assistant = assistantsRepository.findByCompany(companyId);
         if(assistant == null) {
             throw new RuntimeException("No assistant found for the given company and type.");
         }
@@ -34,7 +31,7 @@ public class Gemini implements IAssistant {
         
     }
     @Override
-    public ChatLanguageModel buildChatModel(Assistant assistant) {
+    public ChatLanguageModel buildChatModel(Domain.Models.Assistant assistant) {
      
         String apiKey = assistant.getToken();
         String modelName = assistant.getModel();

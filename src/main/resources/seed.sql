@@ -30,13 +30,17 @@ WHERE c.name = 'Demo Clinic'
   );
 
 -- Insertar Bot Types
-INSERT INTO bot_types (name, description)
-VALUES ('Chatbot', 'Bot de atención al cliente')
-ON CONFLICT DO NOTHING;
+INSERT INTO bot_types (name)
+SELECT 'Chatbot'
+WHERE NOT EXISTS (
+    SELECT 1 FROM bot_types WHERE name = 'Chatbot'
+);
 
-INSERT INTO bot_types (name, description)
-VALUES ('Assistant', 'Asistente inteligente')
-ON CONFLICT DO NOTHING;
+INSERT INTO bot_types (name)
+SELECT 'Assistant'
+WHERE NOT EXISTS (
+    SELECT 1 FROM bot_types WHERE name = 'Assistant'
+);
 
 -- Insertar Bot de Prueba
 INSERT INTO bots (name, components, trigger, company_id, bot_type_id)
@@ -50,13 +54,24 @@ WHERE c.name = 'Demo Clinic'
       WHERE b.name = 'Bot Demo' AND b.company_id = c.id
   );
 
--- Insertar Asistentes de Prueba
-INSERT INTO assistans (name, description, company_id)
-SELECT 'Asistente Médico', 'Asistente para consultas médicas', c.id
+-- Insertar Asistente de Prueba
+INSERT INTO assistans (ia_provider, url, token, model, system_prompt, company_id)
+SELECT 0, 'https://generativelanguage.googleapis.com/v1beta/openai/', 'AIzaSyDemoKeyForGemini', 'gemini-1.5-flash', 'Eres un asistente médico virtual útil, educado y profesional.', c.id
 FROM companies c
 WHERE c.name = 'Demo Clinic'
   AND NOT EXISTS (
       SELECT 1
       FROM assistans a
-      WHERE a.name = 'Asistente Médico' AND a.company_id = c.id
+      WHERE a.company_id = c.id
+  );
+
+-- Insertar Usuario de Prueba
+INSERT INTO users (username, password, role, company_id)
+SELECT 'admin@demo.com', '123456', 'admin', c.id
+FROM companies c
+WHERE c.name = 'Demo Clinic'
+  AND NOT EXISTS (
+      SELECT 1
+      FROM users u
+      WHERE u.username = 'admin@demo.com'
   );

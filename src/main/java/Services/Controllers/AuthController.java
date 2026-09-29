@@ -7,9 +7,8 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+import Application.Contracts.IAuthService;
 import Application.Entities.AuthRequest;
-import Application.Services.AuthService;
 
 
 @Path("/auth")
@@ -20,7 +19,7 @@ import Application.Services.AuthService;
 public class AuthController {
 
 	@Inject
-	AuthService authService;
+	IAuthService authService;
 	@POST
 	@Path(("/login"))
 	@PermitAll

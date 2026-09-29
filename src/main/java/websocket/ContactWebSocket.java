@@ -1,17 +1,19 @@
 package websocket;
 
+import Application.Contracts.IMessageService;
+import Application.Entities.SaveMessageRequest;
 import io.quarkus.logging.Log;
 import io.quarkus.websockets.next.*;
 import io.vertx.core.json.Json;
 import jakarta.inject.Inject;
 
-import java.util.Objects;
-
 @WebSocket(path = "/chat/{contactId}")
 public class ContactWebSocket {
 
 	// Declare the type of messages that can be sent and received
-	public enum MessageType {USER_JOINED, USER_LEFT, CHAT_MESSAGE}
+	public enum MessageType {
+		USER_JOINED, USER_LEFT, CHAT_MESSAGE
+	}
 
 	public record ChatMessage(MessageType type, String from, String message) {
 	}
@@ -20,6 +22,8 @@ public class ContactWebSocket {
 	WebSocketConnection connection;
 	@Inject
 	OpenConnections openConnections;
+	@Inject
+	IMessageService messageService;
 
 	@OnOpen(broadcast = true)
 	public ChatMessage onOpen() {
@@ -35,23 +39,24 @@ public class ContactWebSocket {
 	}
 
 	@OnTextMessage(broadcast = true)
-	public ChatMessage onMessage(ChatMessage message) {
-		Log.info("onMessage: " + message);
-		return message;
+	public Boolean onMessage(SaveMessageRequest request) {
+		Log.info("Intentando enviar mensaje a contacto " + request);
+
+		return messageService.saveMessage(request);
+
 	}
 
 	public void sendToContact(String contactId, Object message) {
 		Log.info("Intentando enviar mensaje a contacto " + contactId);
-		Log.info("Lista de conexiones"+openConnections.listAll());
+		Log.info("Lista de conexiones" + openConnections.listAll());
 
 		openConnections.listAll().forEach(
-			conn -> {
-				Log.info("Conexión encontrada, enviando..."+conn.pathParam("contactId"));
-				if(conn.pathParam("contactId").toString().equals(contactId)) {
-					conn.sendTextAndAwait(Json.encode(message));
-				}
-			}
-		);
+				conn -> {
+					Log.info("Conexión encontrada, enviando..." + conn.pathParam("contactId"));
+					if (conn.pathParam("contactId").toString().equals(contactId)) {
+						conn.sendTextAndAwait(Json.encode(message));
+					}
+				});
 		//
 
 	}
