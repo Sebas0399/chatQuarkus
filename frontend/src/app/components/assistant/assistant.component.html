@@ -1,0 +1,94 @@
+<app-navbar></app-navbar>
+<div class="min-h-[calc(100vh-65px)] bg-slate-50 p-8 font-sans">
+  <div class="max-w-4xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-black text-slate-900 tracking-tight">AI Assistant & RAG Settings</h1>
+        <p class="text-slate-500 mt-1">Configure assistant parameters, knowledge base vectorization (RAG), and script sandboxes.</p>
+      </div>
+    </div>
+
+    <!-- Assistant Configuration Section -->
+    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-8">
+      <div>
+        <h3 class="text-xl font-bold text-slate-800 mb-1 flex items-center gap-2">
+          <i class="pi pi-cog text-sky-600"></i> Assistant Parameters
+        </h3>
+        <p class="text-slate-500 text-sm">Update the assistant name, system instructions, and provider integration.</p>
+      </div>
+
+      <form (ngSubmit)="saveAssistant()" class="space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Assistant Name</label>
+          <input type="text" [(ngModel)]="assistant.name" name="name" pInputText class="w-full p-inputtext-sm rounded-xl border-slate-300" placeholder="e.g. Support Bot">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">System Instructions Prompt</label>
+          <textarea [(ngModel)]="assistant.prompt" name="prompt" rows="4" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500" placeholder="Define how the assistant should respond to customers..."></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">AI Provider Model</label>
+          <select [(ngModel)]="assistant.type" name="type" class="w-full p-3 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500">
+            <option value="GEMINI">Google Gemini</option>
+            <option value="OPENAI">OpenAI GPT</option>
+          </select>
+        </div>
+        <button pButton label="Save Assistant Settings" icon="pi pi-save" class="p-button-primary rounded-xl px-6 py-3 shadow-md shadow-sky-600/20" type="submit"></button>
+      </form>
+
+      <hr class="border-slate-200">
+
+      <!-- RAG Knowledge Base Ingestion Section -->
+      <div>
+        <h3 class="text-xl font-bold text-slate-800 mb-1 flex items-center gap-2">
+          <i class="pi pi-database text-sky-600"></i> Knowledge Base RAG (Elasticsearch)
+        </h3>
+        <p class="text-slate-500 text-sm">Ingest documents and FAQs so the AI assistant retrieves accurate context automatically.</p>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Document Title / Topic</label>
+          <input type="text" [(ngModel)]="ragTitle" pInputText class="w-full p-inputtext-sm rounded-xl border-slate-300" placeholder="e.g. Pricing & Refund Policy">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Knowledge Content / Text</label>
+          <textarea [(ngModel)]="ragText" rows="4" class="w-full border border-slate-300 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500" placeholder="Paste company knowledge base or FAQs here..."></textarea>
+        </div>
+        <button pButton [label]="isIngesting ? 'Vectorizing & Indexing...' : 'Ingest Document to RAG'" [icon]="isIngesting ? 'pi pi-spin pi-spinner' : 'pi pi-cloud-upload'" class="p-button-success rounded-xl px-6 py-3 shadow-md" (click)="ingestDocument()" [disabled]="isIngesting"></button>
+
+        <div *ngIf="ingestMessage" class="p-3 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-xl text-sm font-medium">
+          {{ ingestMessage }}
+        </div>
+      </div>
+
+      <hr class="border-slate-200">
+
+      <!-- GraalVM Sandbox -->
+      <div>
+        <h3 class="text-xl font-bold text-slate-800 mb-1 flex items-center gap-2">
+          <i class="pi pi-code text-sky-600"></i> GraalVM JavaScript Sandbox Tester
+        </h3>
+        <p class="text-slate-500 text-sm">Write custom JavaScript automation scripts and test their execution output instantly.</p>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">JavaScript Function Body</label>
+          <textarea [(ngModel)]="testScript" rows="3" class="w-full border border-slate-300 rounded-xl p-3 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500" placeholder="return 'Hello ' + args.name;"></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-slate-700 mb-2">Test Arguments (JSON format)</label>
+          <input type="text" [(ngModel)]="testArgs" pInputText class="w-full p-inputtext-sm font-mono rounded-xl border-slate-300" placeholder='{"name": "Developer"}'>
+        </div>
+        <button pButton label="Run Script Test" icon="pi pi-play" class="p-button-secondary rounded-xl px-6 py-3 shadow-md" (click)="testTool()"></button>
+
+        <div *ngIf="testResult" class="mt-4 bg-slate-900 text-slate-100 p-5 rounded-2xl font-mono text-xs overflow-x-auto shadow-inner border border-slate-800">
+          <div class="text-[11px] font-bold text-slate-400 mb-2 uppercase tracking-wider">Execution Output</div>
+          <pre class="m-0 text-emerald-400">{{ testResult | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

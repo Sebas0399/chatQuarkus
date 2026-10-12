@@ -1,0 +1,28 @@
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.login-bg-glow {
+  animation: pulse-glow 8s ease-in-out infinite;
+}
+
+.login-card-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.input-field-glow:focus {
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+}

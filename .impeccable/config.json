@@ -1,0 +1,10 @@
+{
+  "buildPath": "code",
+  "detector": {
+    "ignoreRules": [
+      "gray-on-color"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": []
+  }
+}
