@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
+import { SkeletonModule } from 'primeng/skeleton';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -39,7 +40,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ButtonModule,
     InputTextModule,
     CardModule,
-    TabViewModule
+    TabViewModule,
+    SkeletonModule
   ],
   providers: [
     {

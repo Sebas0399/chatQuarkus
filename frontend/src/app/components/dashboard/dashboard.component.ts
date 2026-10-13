@@ -9,29 +9,44 @@ import { ApiService } from '../../services/api.service';
 export class DashboardComponent implements OnInit {
   contacts: any[] = [];
   assistant: any = { name: '', prompt: '', type: 'GEMINI' };
+  isLoading = true;
 
   constructor(private api: ApiService) {}
 
   ngOnInit() {
-    this.loadContacts();
-    this.loadAssistant();
+    this.loadData();
   }
 
-  loadContacts() {
+  loadData() {
+    this.isLoading = true;
+    let completed = 0;
+    const checkDone = () => {
+      completed++;
+      if (completed >= 2) {
+        this.isLoading = false;
+      }
+    };
+
     this.api.getContacts().subscribe({
       next: (res: any) => {
         this.contacts = res.data?.content || res.content || res.data || [];
+        checkDone();
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        checkDone();
+      }
     });
-  }
 
-  loadAssistant() {
     this.api.getAssistant().subscribe({
       next: (res: any) => {
         if (res.data) this.assistant = res.data;
+        checkDone();
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        checkDone();
+      }
     });
   }
 }

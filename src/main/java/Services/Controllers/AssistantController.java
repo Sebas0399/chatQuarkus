@@ -47,7 +47,8 @@ public class AssistantController {
     @Path("/tools/test")
     public Response testTool(TestScriptRequest request) {
         try {
-            TestToolResponse result = scriptEngineService.testScript(request.getScript(), request.getArgsJson());
+            String argsStr = request.getArgsJsonAsString();
+            TestToolResponse result = scriptEngineService.testScript(request.getScript(), argsStr);
             return Response.success(Map.of("success", true, "output", result));
         } catch (Exception e) {
             // GraalVM entrega el error exacto de compilación/sintaxis y la línea

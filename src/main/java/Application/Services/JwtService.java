@@ -3,6 +3,7 @@ package Application.Services;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 
+import java.time.Duration;
 import java.util.Set;
 
 import Application.Contracts.IJwtService;
@@ -14,6 +15,7 @@ public class JwtService implements IJwtService {
 			.upn(username)
 			.groups(roles)
 			.claim("companyId", companyId)
+			.expiresIn(Duration.ofHours(2))
 			.sign();
 	}
 }

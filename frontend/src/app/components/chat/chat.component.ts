@@ -16,6 +16,8 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   messages: any[] = [];
   newMessageText = '';
   isSending = false;
+  isLoadingContacts = true;
+  isLoadingMessages = false;
   private wsSub: Subscription | null = null;
   private shouldScroll = true;
 
@@ -65,11 +67,16 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   loadContacts() {
+    this.isLoadingContacts = true;
     this.api.getContacts().subscribe({
       next: (res: any) => {
         this.contacts = res.data?.content || res.content || res.data || [];
+        this.isLoadingContacts = false;
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.isLoadingContacts = false;
+      }
     });
   }
 
@@ -81,12 +88,17 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   loadMessages(contactId: number) {
+    this.isLoadingMessages = true;
     this.api.getMessages(contactId).subscribe({
       next: (res: any) => {
         this.messages = res.data || res || [];
+        this.isLoadingMessages = false;
         this.shouldScroll = true;
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.isLoadingMessages = false;
+      }
     });
   }
 

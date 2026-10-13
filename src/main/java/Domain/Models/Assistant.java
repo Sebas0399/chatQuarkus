@@ -10,7 +10,7 @@ public class Assistant {
     private String token;
     private String model;
     private String systemPrompt;
-    public String toolsJson; // JSON con las herramientas habilitadas
-    public String documentsJson; // JSON con los documentos indexados (RAG)
-    public Integer companyId;
+    private String toolsJson;
+    private String documentsJson;
+    private Integer companyId;
 }

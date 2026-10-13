@@ -10,64 +10,102 @@
       <button pButton label="Open Chats" icon="pi pi-inbox" class="p-button-primary rounded-xl px-5 shadow-sm" routerLink="/chat"></button>
     </header>
 
-    <!-- Stats Grid -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-        <div class="w-14 h-14 bg-sky-50 text-sky-700 rounded-2xl flex items-center justify-center font-bold text-2xl">
-          <i class="pi pi-users"></i>
-        </div>
-        <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider m-0">Contacts</p>
-          <h3 class="text-3xl font-extrabold text-slate-800 m-0 mt-1">{{ contacts.length }}</h3>
-        </div>
-      </div>
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-        <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center font-bold text-2xl">
-          <i class="pi pi-android"></i>
-        </div>
-        <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider m-0">Assistant</p>
-          <h3 class="text-xl font-extrabold text-slate-800 m-0 mt-1 truncate max-w-[200px]">{{ assistant.name || 'Not Configured' }}</h3>
-        </div>
-      </div>
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
-        <div class="w-14 h-14 bg-amber-50 text-amber-700 rounded-2xl flex items-center justify-center font-bold text-2xl">
-          <i class="pi pi-bolt"></i>
-        </div>
-        <div>
-          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider m-0">Engine</p>
-          <h3 class="text-xl font-extrabold text-slate-800 m-0 mt-1">GraalVM</h3>
-        </div>
-      </div>
-    </section>
-
-    <!-- Recent Contacts -->
-    <section class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
-      <div class="flex items-center justify-between">
-        <div>
-          <h3 class="text-xl font-bold text-slate-800 m-0">Recent Contacts</h3>
-          <p class="text-slate-500 text-sm mt-0.5">Latest active conversations</p>
-        </div>
-        <button pButton label="View All" icon="pi pi-arrow-right" class="p-button-text text-sky-600 font-semibold" routerLink="/chat"></button>
-      </div>
-
-      <div class="divide-y divide-slate-100">
-        <div *ngFor="let c of contacts.slice(0, 5)" class="py-3 flex items-center justify-between">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center text-xs">
-              {{ (c.name || c.phone || 'U').substring(0, 2).toUpperCase() }}
-            </div>
-            <div>
-              <h4 class="font-bold text-slate-800 text-sm m-0">{{ c.name || c.phone }}</h4>
-              <span class="text-xs text-slate-500">{{ c.phone }}</span>
-            </div>
+    <!-- Skeleton Loading State -->
+    <div *ngIf="isLoading" class="space-y-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div *ngFor="let i of [1,2,3]" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+          <p-skeleton shape="circle" size="3.5rem"></p-skeleton>
+          <div class="space-y-2 flex-1">
+            <p-skeleton width="40%" height="0.75rem"></p-skeleton>
+            <p-skeleton width="70%" height="1.5rem"></p-skeleton>
           </div>
-          <button pButton label="Chat" icon="pi pi-comments" class="p-button-sm p-button-outlined rounded-xl" routerLink="/chat"></button>
-        </div>
-        <div *ngIf="contacts.length === 0" class="text-center py-6 text-slate-400 text-sm">
-          No contacts found.
         </div>
       </div>
-    </section>
+
+      <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex items-center justify-between">
+          <div class="space-y-2">
+            <p-skeleton width="12rem" height="1.5rem"></p-skeleton>
+            <p-skeleton width="8rem" height="0.875rem"></p-skeleton>
+          </div>
+          <p-skeleton width="6rem" height="2rem"></p-skeleton>
+        </div>
+        <div class="space-y-4">
+          <div *ngFor="let i of [1,2,3]" class="flex items-center justify-between py-2">
+            <div class="flex items-center gap-3">
+              <p-skeleton shape="circle" size="2.5rem"></p-skeleton>
+              <div class="space-y-1.5">
+                <p-skeleton width="10rem" height="1rem"></p-skeleton>
+                <p-skeleton width="6rem" height="0.75rem"></p-skeleton>
+              </div>
+            </div>
+            <p-skeleton width="4rem" height="2rem" borderRadius="12px"></p-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loaded Content -->
+    <div *ngIf="!isLoading" class="space-y-8">
+      <!-- Stats Grid -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+          <div class="w-14 h-14 bg-sky-50 text-sky-700 rounded-2xl flex items-center justify-center font-bold text-2xl shadow-inner">
+            <i class="pi pi-users"></i>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider m-0">Contacts</p>
+            <h3 class="text-3xl font-extrabold text-slate-800 m-0 mt-1">{{ contacts.length }}</h3>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+          <div class="w-14 h-14 bg-emerald-50 text-emerald-700 rounded-2xl flex items-center justify-center font-bold text-2xl shadow-inner">
+            <i class="pi pi-android"></i>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider m-0">Assistant</p>
+            <h3 class="text-xl font-extrabold text-slate-800 m-0 mt-1 truncate max-w-[200px]">{{ assistant.name || 'Not Configured' }}</h3>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex items-center gap-4">
+          <div class="w-14 h-14 bg-amber-50 text-amber-700 rounded-2xl flex items-center justify-center font-bold text-2xl shadow-inner">
+            <i class="pi pi-bolt"></i>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider m-0">Engine</p>
+            <h3 class="text-xl font-extrabold text-slate-800 m-0 mt-1">GraalVM</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Contacts -->
+      <section class="bg-white p-8 rounded-3xl shadow-sm border border-slate-200 space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-slate-800 m-0">Recent Contacts</h3>
+            <p class="text-slate-500 text-sm mt-0.5">Latest active conversations</p>
+          </div>
+          <button pButton label="View All" icon="pi pi-arrow-right" class="p-button-text text-sky-600 font-semibold" routerLink="/chat"></button>
+        </div>
+
+        <div class="divide-y divide-slate-100">
+          <div *ngFor="let c of contacts.slice(0, 5)" class="py-3 flex items-center justify-between hover:bg-slate-50/50 px-3 rounded-2xl transition-colors">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-full bg-sky-100 text-sky-700 font-bold flex items-center justify-center text-xs shadow-sm">
+                {{ (c.name || c.phone || 'U').substring(0, 2).toUpperCase() }}
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-800 text-sm m-0">{{ c.name || c.phone }}</h4>
+                <span class="text-xs text-slate-500 font-medium">{{ c.phone }}</span>
+              </div>
+            </div>
+            <button pButton label="Chat" icon="pi pi-comments" class="p-button-sm p-button-outlined rounded-xl" routerLink="/chat"></button>
+          </div>
+          <div *ngIf="contacts.length === 0" class="text-center py-8 text-slate-400 text-sm font-medium">
+            No contacts found.
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </main>
